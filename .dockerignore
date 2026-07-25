@@ -1,0 +1,10 @@
+Add:
+__pycache__
+
+*.pyc
+
+.env
+
+.git
+
+uploads/*

@@ -1,0 +1,21 @@
+# Secrets
+.env
+backend/.env
+
+# Database
+*.db
+
+# Uploaded files
+uploads/
+temp_uploads/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Streamlit
+.streamlit/
+
+# macOS
+.DS_Store

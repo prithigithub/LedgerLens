@@ -1,0 +1,88 @@
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: ledgerlens-api
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./uploads:/app/uploads
+
+    environment:
+      DATABASE_URL: sqlite:///ledgerlens.db
+
+    networks:
+      - ledgerlens-network
+
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+
+    container_name: ledgerlens-ui
+
+    ports:
+      - "8501:8501"
+
+    depends_on:
+      - backend
+
+    networks:
+      - ledgerlens-network
+
+
+  prometheus:
+    image: prom/prometheus:latest
+
+    container_name: ledgerlens-prometheus
+
+    ports:
+      - "9090:9090"
+
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+    depends_on:
+      - backend
+
+    networks:
+      - ledgerlens-network
+
+
+  grafana:
+    image: grafana/grafana:latest
+
+    container_name: ledgerlens-grafana
+
+    ports:
+      - "3001:3000"
+
+    depends_on:
+      - prometheus
+
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+    networks:
+      - ledgerlens-network
+
+
+volumes:
+
+  grafana-storage:
+
+
+networks:
+
+  ledgerlens-network:
