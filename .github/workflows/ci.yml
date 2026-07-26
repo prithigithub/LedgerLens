@@ -50,6 +50,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate Docker Compose
+        run: |
+          docker compose config
+
       - name: Build Docker images
         run: |
           docker compose build
