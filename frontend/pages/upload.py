@@ -6,9 +6,9 @@ import streamlit as st
 from dotenv import load_dotenv
 
 
-# -----------------------------
+
 # Load Environment Variables
-# -----------------------------
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,18 +23,18 @@ API_URL = os.getenv(
 )
 
 
-# -----------------------------
+
 # Page Title
-# -----------------------------
+
 
 st.title(
     "Upload Invoice"
 )
 
 
-# -----------------------------
+
 # Choose Invoice Image
-# -----------------------------
+
 
 uploaded_file = st.file_uploader(
 
@@ -49,9 +49,9 @@ uploaded_file = st.file_uploader(
 )
 
 
-# -----------------------------
+
 # Display Selected Image
-# -----------------------------
+
 
 if uploaded_file:
 
@@ -66,9 +66,9 @@ if uploaded_file:
     )
 
 
-    # -----------------------------
+    
     # Process Invoice
-    # -----------------------------
+    
 
     if st.button(
 
@@ -110,6 +110,10 @@ if uploaded_file:
                 )
 
 
+            
+            # Successful Processing
+            
+
             if response.status_code == 200:
 
                 result = response.json()
@@ -121,6 +125,10 @@ if uploaded_file:
 
                 )
 
+
+                
+                # Display Processing Result
+                
 
                 st.subheader(
 
@@ -136,6 +144,10 @@ if uploaded_file:
                 )
 
 
+            
+            # Failed Processing
+            
+
             else:
 
                 st.error(
@@ -146,6 +158,10 @@ if uploaded_file:
 
                 )
 
+
+        
+        # Backend Connection Error
+        
 
         except requests.exceptions.ConnectionError:
 
@@ -158,6 +174,10 @@ if uploaded_file:
             )
 
 
+        
+        # Request Timeout
+        
+
         except requests.exceptions.Timeout:
 
             st.error(
@@ -168,6 +188,10 @@ if uploaded_file:
 
             )
 
+
+        
+        # Unexpected Error
+        
 
         except Exception as e:
 

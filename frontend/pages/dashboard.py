@@ -6,9 +6,9 @@ import streamlit as st
 from dotenv import load_dotenv
 
 
-# -----------------------------
+
 # Load Environment Variables
-# -----------------------------
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,18 +23,18 @@ API_URL = os.getenv(
 )
 
 
-# -----------------------------
+
 # Page Title
-# -----------------------------
+
 
 st.title(
     "LedgerLens Analytics"
 )
 
 
-# -----------------------------
+
 # Load Prometheus Metrics
-# -----------------------------
+
 
 try:
 
@@ -84,9 +84,9 @@ except Exception as e:
     st.stop()
 
 
-# -----------------------------
+
 # Prometheus Metrics
-# -----------------------------
+
 
 st.subheader(
     "System Metrics"
@@ -100,9 +100,9 @@ st.text_area(
 )
 
 
-# -----------------------------
+
 # Invoice Statistics
-# -----------------------------
+
 
 st.subheader(
     "Invoice Overview"
@@ -144,9 +144,9 @@ with col4:
     )
 
 
-# -----------------------------
+
 # Processing Performance
-# -----------------------------
+
 
 st.subheader(
     "Processing Performance"

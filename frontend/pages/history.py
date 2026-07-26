@@ -6,9 +6,9 @@ import streamlit as st
 from dotenv import load_dotenv
 
 
-# -----------------------------
+
 # Load Environment Variables
-# -----------------------------
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,18 +23,18 @@ API_URL = os.getenv(
 )
 
 
-# -----------------------------
+
 # Page Title
-# -----------------------------
+
 
 st.title(
     "Invoice History"
 )
 
 
-# -----------------------------
+
 # Get Invoice History
-# -----------------------------
+
 
 try:
 
@@ -84,9 +84,9 @@ except Exception as e:
     st.stop()
 
 
-# -----------------------------
+
 # No Documents
-# -----------------------------
+
 
 if not documents:
 
@@ -95,9 +95,9 @@ if not documents:
     )
 
 
-# -----------------------------
+
 # Display Documents
-# -----------------------------
+
 
 else:
 
@@ -120,9 +120,9 @@ else:
         col1, col2, col3 = st.columns(3)
 
 
-        # -----------------------------
+        
         # Status
-        # -----------------------------
+        
 
         with col1:
 
@@ -158,9 +158,9 @@ else:
                 )
 
 
-        # -----------------------------
+        
         # Confidence
-        # -----------------------------
+        
 
         with col2:
 
@@ -197,9 +197,9 @@ else:
                 )
 
 
-        # -----------------------------
+        
         # Document ID
-        # -----------------------------
+        
 
         with col3:
 
@@ -216,9 +216,9 @@ else:
             )
 
 
-        # -----------------------------
+        
         # Invoice Data
-        # -----------------------------
+        
 
         with st.expander(
             "View Extracted Invoice Data"
@@ -243,9 +243,9 @@ else:
                 )
 
 
-        # -----------------------------
+        
         # Human Review Data
-        # -----------------------------
+        
 
         reviewed_data = doc.get(
             "reviewed_data"

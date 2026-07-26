@@ -6,9 +6,9 @@ import streamlit as st
 from dotenv import load_dotenv
 
 
-# -----------------------------
+
 # Load Environment Variables
-# -----------------------------
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,18 +23,18 @@ API_URL = os.getenv(
 )
 
 
-# -----------------------------
+
 # Page Title
-# -----------------------------
+
 
 st.title(
     "Human Review Queue"
 )
 
 
-# -----------------------------
+
 # Get Review Queue
-# -----------------------------
+
 
 try:
 
@@ -84,9 +84,9 @@ except Exception as e:
     st.stop()
 
 
-# -----------------------------
+
 # Display Review Queue
-# -----------------------------
+
 
 if not reviews:
 
@@ -138,9 +138,9 @@ else:
         )
 
 
-        # -----------------------------
+        
         # Editable Invoice Fields
-        # -----------------------------
+        
 
         for field, value in invoice_data.items():
 
@@ -186,9 +186,9 @@ else:
             }
 
 
-        # -----------------------------
+        
         # Approve Invoice
-        # -----------------------------
+        
 
         if st.button(
 
