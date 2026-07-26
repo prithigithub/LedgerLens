@@ -1,19 +1,95 @@
 # LedgerLens
 
-## AI-Powered Invoice Processing and Human Review System
+## AI-Powered Invoice Processing and Human Review Platform
 
-LedgerLens is an AI-powered invoice processing application that extracts structured information from invoice images, validates the extracted data, assigns confidence scores, detects personally identifiable information (PII), and routes low-confidence invoices for human review.
+LedgerLens is an AI-powered invoice processing platform that extracts structured information from invoice images, validates the extracted data, assigns confidence scores, detects personally identifiable information (PII), and routes low-confidence invoices for human review.
 
-The application is designed as an end-to-end production-style invoice processing system using FastAPI, Streamlit, OpenAI Vision, SQLite, Docker, Prometheus, Grafana, Pytest, GitHub Actions, and Google Cloud Run.
+The application is designed as an end-to-end production-style system using:
+
+* FastAPI
+* Streamlit
+* OpenAI Vision
+* Pydantic
+* SQLAlchemy
+* SQLite
+* Docker
+* Docker Compose
+* Prometheus
+* Grafana
+* Pytest
+* GitHub Actions
+* Linux VPS deployment
+* CloudPanel
+* Nginx reverse proxy
+* Let's Encrypt HTTPS
+
+The application is deployed on a production VPS and is accessible through secure HTTPS domains.
 
 ---
 
-## Project Objectives
+## Live Deployment
+
+### Frontend
+
+```text
+https://ledgerlens.prithibhandari.co.in
+```
+
+The Streamlit frontend provides the user interface for:
+
+* Home
+* Dashboard
+* History
+* Human Review
+* Invoice Upload
+
+---
+
+### Backend API
+
+```text
+https://api.prithibhandari.co.in
+```
+
+The FastAPI backend provides the invoice processing API.
+
+---
+
+### Swagger API Documentation
+
+```text
+https://api.prithibhandari.co.in/docs
+```
+
+The Swagger interface allows API endpoints to be tested interactively.
+
+---
+
+### Monitoring
+
+Prometheus:
+
+```text
+https://prometheus.prithibhandari.co.in
+```
+
+Grafana:
+
+```text
+https://grafana.prithibhandari.co.in
+```
+
+The monitoring services are deployed using Docker and exposed securely through CloudPanel reverse proxies and HTTPS.
+
+---
+
+# Project Objectives
 
 LedgerLens is designed to:
 
-* Accept invoice images in JPG and PNG formats.
+* Accept invoice images in JPG, JPEG, and PNG formats.
 * Moderate uploaded invoice images before processing.
+* Detect whether uploaded images contain invoices.
 * Extract structured invoice data using AI vision capabilities.
 * Validate extracted data using Pydantic schemas.
 * Generate confidence scores for extracted invoice fields.
@@ -24,58 +100,69 @@ LedgerLens is designed to:
 * Apply watermarking to processed invoice images.
 * Store invoice data in a database.
 * Expose application metrics for monitoring.
-* Run automated tests through CI/CD.
-* Containerize the application using Docker.
-* Support cloud deployment using Google Cloud Run.
+* Run automated tests through CI.
+* Build and validate Docker containers through GitHub Actions.
+* Deploy the application on a production VPS using Docker Compose.
+* Provide secure HTTPS access through CloudPanel and Let's Encrypt.
 
 ---
 
-## System Workflow
+# System Workflow
 
 ```text
-                Invoice Image
-                     │
-                     ▼
-             Upload Invoice
-                     │
-                     ▼
-             Image Moderation
-                     │
-                     ▼
-          AI Invoice Data Extraction
-                     │
-                     ▼
-            Pydantic Validation
-                     │
-                     ▼
-          Confidence Score Evaluation
-                     │
-          ┌──────────┴──────────┐
-          │                     │
-          ▼                     ▼
-   High Confidence        Low Confidence
-          │                     │
-          ▼                     ▼
- Automatic Approval       Human Review Queue
-                                │
-                                ▼
-                        Approve / Correct
-                                │
-                                ▼
-                         Final Invoice Data
-                                │
-                                ▼
-                          Watermarking
-                                │
-                                ▼
-                         Database Storage
+                    Invoice Image
+                         │
+                         ▼
+                 Streamlit Upload
+                         │
+                         ▼
+                  FastAPI Backend
+                         │
+                         ▼
+                  Image Moderation
+                         │
+                         ▼
+                  Invoice Detection
+                         │
+                         ▼
+                AI Invoice Extraction
+                         │
+                         ▼
+                  Pydantic Validation
+                         │
+                         ▼
+               Confidence Evaluation
+                         │
+                 ┌───────┴────────┐
+                 │                │
+                 ▼                ▼
+          High Confidence    Low Confidence
+                 │                │
+                 ▼                ▼
+        Automatic Approval   Human Review Queue
+                                  │
+                                  ▼
+                         Approve / Correct
+                                  │
+                                  ▼
+                          Final Invoice Data
+                                  │
+                                  ▼
+                             Watermarking
+                                  │
+                                  ▼
+                           Database Storage
+                                  │
+                                  ▼
+                              Monitoring
+                         Prometheus + Grafana
 ```
 
 ---
 
-## Key Features
+# Key Features
 
-### 1. Invoice Upload
+## 1. Invoice Upload
 
 The system accepts invoice images through the Streamlit frontend and FastAPI API.
 
@@ -85,23 +172,37 @@ Supported formats:
 * JPEG
 * PNG
 
-The invoice can be uploaded through the web interface or through the FastAPI Swagger documentation.
+Invoices can be uploaded through the web application or tested through the FastAPI Swagger documentation.
 
 ---
 
-### 2. Image Moderation
+## 2. Image Moderation
 
 Uploaded images are checked before invoice processing.
 
-This helps prevent inappropriate or unsupported content from entering the invoice extraction pipeline.
+The moderation process helps identify inappropriate or unsupported content before it enters the invoice processing workflow.
+
+Images may be:
+
+* Approved for processing
+* Sent for moderation review
+* Blocked based on moderation results
 
 ---
 
-### 3. AI-Powered Invoice Extraction
+## 3. Invoice Detection
 
-The system uses AI vision capabilities to extract structured invoice information from invoice images.
+The system verifies whether an uploaded image is likely to contain an invoice.
 
-The extracted data includes fields such as:
+This helps prevent unrelated images from being processed as invoices.
+
+---
+
+## 4. AI-Powered Invoice Extraction
+
+LedgerLens uses AI vision capabilities to extract structured information from invoice images.
+
+The invoice schema includes:
 
 * Vendor
 * Invoice number
@@ -110,64 +211,78 @@ The extracted data includes fields such as:
 * Subtotal
 * Tax
 * Total
-* Payment method
 * Line items
+* Overall confidence
+
+Example line-item information includes:
+
+* Description
+* Quantity
+* Unit price
+* Amount
+* Confidence score
 
 ---
 
-### 4. Structured Data Validation
+## 5. Structured Data Validation
 
 Extracted data is validated using Pydantic models.
 
-Example invoice fields contain:
+Invoice fields contain structured values and confidence scores.
+
+Example:
 
 ```text
-value
-confidence
+Field
+├── value
+└── confidence
 ```
 
-This ensures that extracted invoice information follows the expected schema before being stored or processed further.
+This ensures that extracted invoice information follows the expected application schema before being stored or processed.
 
 ---
 
-### 5. Confidence-Based Processing
+## 6. Confidence-Based Processing
 
-Each extracted field contains a confidence score.
+Each extracted invoice field receives a confidence score.
 
 The system evaluates the overall confidence of the invoice.
 
 ```text
 High Confidence
-      ↓
+      │
+      ▼
 Automatic Approval
 ```
 
 ```text
 Low Confidence
-      ↓
+      │
+      ▼
 Human Review Required
 ```
 
-This prevents uncertain AI-generated invoice data from being automatically approved without human verification.
+This prevents uncertain AI-generated data from being automatically approved without human verification.
 
 ---
 
-### 6. Human Review Workflow
+## 7. Human Review Workflow
 
 Low-confidence invoices are routed to a review queue.
 
 A reviewer can:
 
-* View the extracted invoice data.
+* View extracted invoice data.
 * Review confidence scores.
-* Correct incorrect fields.
+* Identify missing or uncertain fields.
+* Correct incorrect information.
 * Approve the invoice after verification.
 
 This provides human oversight for uncertain AI results.
 
 ---
 
-### 7. PII Detection and Redaction
+## 8. PII Detection and Redaction
 
 The application detects sensitive information such as:
 
@@ -177,11 +292,11 @@ The application detects sensitive information such as:
 
 Sensitive information is redacted before being written to logs.
 
-This helps prevent accidental exposure of private information.
+This helps reduce the risk of accidentally exposing private information through application logs.
 
 ---
 
-### 8. Invoice Watermarking
+## 9. Invoice Watermarking
 
 Processed invoice images can be watermarked using the Python Imaging Library (PIL).
 
@@ -189,9 +304,27 @@ Watermarking helps identify processed documents and provides an additional proce
 
 ---
 
-## Technology Stack
+## 10. Database Storage
 
-### Backend
+Invoice processing results and document metadata are stored using SQLAlchemy.
+
+The application currently uses SQLite for database storage.
+
+Stored information includes data such as:
+
+* Document filename
+* Processing status
+* Confidence score
+* Extracted invoice data
+* Reviewed invoice data
+* Watermarked file path
+* Creation timestamp
+
+---
+
+# Technology Stack
+
+## Backend
 
 * Python
 * FastAPI
@@ -199,58 +332,83 @@ Watermarking helps identify processed documents and provides an additional proce
 * SQLAlchemy
 * SQLite
 
-### AI
+## AI
 
 * OpenAI Vision API
 
-### Frontend
+## Frontend
 
 * Streamlit
 
-### Testing
+## Image Processing
+
+* Pillow
+
+## Testing
 
 * Pytest
 * FastAPI TestClient
+* HTTPX
 
-### Containerization
+## Containerization
 
 * Docker
 * Docker Compose
 
-### Monitoring
+## Monitoring
 
 * Prometheus
 * Grafana
+* Prometheus Client
 
-### CI/CD
+## CI/CD
 
 * GitHub Actions
 
-### Cloud Deployment
+## Production Infrastructure
 
-* Google Cloud Run
+* Linux VPS
+* CloudPanel
+* Nginx Reverse Proxy
+* Let's Encrypt SSL/TLS
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 LedgerLens/
 │
 ├── backend/
 │   ├── main.py
+│   ├── config.py
+│   │
 │   ├── api/
+│   │   ├── ingest.py
+│   │   ├── review.py
+│   │   ├── approve.py
+│   │   ├── documents.py
+│   │   └── metrics.py
+│   │
+│   ├── database/
+│   ├── models/
 │   ├── schemas/
-│   ├── services/
-│   └── ...
+│   └── services/
 │
 ├── frontend/
 │   ├── home.py
-│   ├── pages/
-│   └── requirements.txt
+│   ├── config.py
+│   ├── requirements.txt
+│   │
+│   └── pages/
+│       ├── dashboard.py
+│       ├── history.py
+│       ├── review.py
+│       └── upload.py
 │
 ├── monitoring/
 │   ├── prometheus.yml
+│   │
 │   └── grafana/
 │       ├── dashboards/
 │       └── provisioning/
@@ -264,11 +422,15 @@ LedgerLens/
 │   ├── test_schema.py
 │   └── test_watermark.py
 │
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
 ├── Dockerfile
 ├── docker-compose.yml
-├── requirements.txt
 ├── .dockerignore
 ├── .gitignore
+├── requirements.txt
 └── README.md
 ```
 
@@ -288,15 +450,21 @@ Install:
 
 ## Environment Variables
 
-Create a local `.env` file:
+Create a local `.env` file in the project root:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
+DATABASE_URL=sqlite:///ledgerlens.db
+CONFIDENCE_THRESHOLD=0.75
+MODERATION_REVIEW_THRESHOLD=0.30
+MODERATION_BLOCK_THRESHOLD=0.70
+API_URL=http://127.0.0.1:8000
+APP_NAME=LedgerLens
 ```
 
 Never commit the real `.env` file or API key to GitHub.
 
-The project `.gitignore` excludes sensitive files such as:
+The `.gitignore` file excludes sensitive files such as:
 
 ```text
 .env
@@ -316,7 +484,7 @@ Build and start all services:
 docker compose up -d --build
 ```
 
-Check the running containers:
+Check running containers:
 
 ```bash
 docker compose ps
@@ -328,41 +496,148 @@ Stop the services:
 docker compose down
 ```
 
+View backend logs:
+
+```bash
+docker compose logs backend
+```
+
+View frontend logs:
+
+```bash
+docker compose logs frontend
+```
+
 ---
 
-## Application Services
+# Local Application Services
 
-### Streamlit Frontend
+## Streamlit Frontend
 
 ```text
 http://localhost:8501
 ```
 
-### FastAPI Swagger Documentation
+## FastAPI API
+
+```text
+http://localhost:8000
+```
+
+## FastAPI Swagger Documentation
 
 ```text
 http://localhost:8000/docs
 ```
 
-### Prometheus
+## Prometheus
 
 ```text
 http://localhost:9090
 ```
 
-### Grafana
+## Grafana
 
 ```text
 http://localhost:3001
 ```
 
-The exact port may be changed in `docker-compose.yml` if the default port is already in use.
+The exact ports can be changed in `docker-compose.yml`.
+
+---
+
+# Production Deployment Architecture
+
+The production application is deployed on a Linux VPS using Docker Compose.
+
+```text
+                         Internet
+                            │
+                            ▼
+              ┌─────────────────────────┐
+              │       CloudPanel         │
+              │   Nginx Reverse Proxy    │
+              │     Let's Encrypt SSL    │
+              └────────────┬────────────┘
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+             ▼             ▼             ▼
+      ledgerlens.       api.         grafana.
+      prithibhandari    prithibhandari  prithibhandari
+      .co.in            .co.in          .co.in
+             │             │             │
+             ▼             ▼             ▼
+        Port 8501      Port 8000      Port 3001
+             │             │             │
+             ▼             ▼             ▼
+        Streamlit      FastAPI       Grafana
+```
+
+Prometheus is also deployed as part of the Docker Compose monitoring stack.
+
+---
+
+# Production URLs
+
+## Frontend
+
+```text
+https://ledgerlens.prithibhandari.co.in
+```
+
+## Backend API
+
+```text
+https://api.prithibhandari.co.in
+```
+
+## Swagger UI
+
+```text
+https://api.prithibhandari.co.in/docs
+```
+
+## Prometheus
+
+```text
+https://prometheus.prithibhandari.co.in
+```
+
+## Grafana
+
+```text
+https://grafana.prithibhandari.co.in
+```
 
 ---
 
 # API Endpoints
 
 The FastAPI backend provides endpoints for the invoice processing workflow.
+
+## Health Check
+
+```text
+GET /health
+```
+
+Example:
+
+```bash
+curl https://api.prithibhandari.co.in/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "running",
+  "application": "LedgerLens"
+}
+```
+
+---
 
 ## Invoice Ingestion
 
@@ -379,13 +654,15 @@ Upload
   ↓
 Moderation
   ↓
+Invoice Detection
+  ↓
 AI Extraction
   ↓
 Validation
   ↓
 Confidence Evaluation
   ↓
-Approval or Human Review
+Automatic Approval or Human Review
 ```
 
 ---
@@ -410,6 +687,26 @@ Approves or updates an invoice after human verification.
 
 ---
 
+## Documents
+
+```text
+GET /documents/
+```
+
+Retrieves processed invoice documents and their extracted data.
+
+---
+
+## Metrics
+
+```text
+GET /metrics
+```
+
+Exposes Prometheus-compatible application metrics.
+
+---
+
 # Testing
 
 The project includes automated tests for core application functionality.
@@ -417,10 +714,10 @@ The project includes automated tests for core application functionality.
 Run the test suite:
 
 ```bash
-PYTHONPATH=. pytest -v
+python -m pytest -v
 ```
 
-Current test coverage includes:
+Current tests include:
 
 * API health endpoint
 * Low-confidence review routing
@@ -438,7 +735,7 @@ Expected result:
 9 passed
 ```
 
-The tests are designed to validate the core application logic without exposing real API keys or sensitive production data.
+The tests validate core application logic without exposing real production API keys or sensitive production data.
 
 ---
 
@@ -446,10 +743,13 @@ The tests are designed to validate the core application logic without exposing r
 
 LedgerLens uses Prometheus and Grafana for application monitoring.
 
-The monitoring stack is:
+The monitoring architecture is:
 
 ```text
 LedgerLens Backend
+        │
+        ▼
+   /metrics
         │
         ▼
    Prometheus
@@ -458,9 +758,9 @@ LedgerLens Backend
      Grafana
 ```
 
-Metrics can be used to monitor application behavior such as:
+The application exposes metrics such as:
 
-* Invoice processing count
+* Total documents processed
 * Human review count
 * Processing latency
 * Moderation latency
@@ -469,7 +769,17 @@ Metrics can be used to monitor application behavior such as:
 * Pending review count
 * Estimated processing cost
 
-Grafana dashboards are provisioned using configuration files stored under:
+Example Prometheus metric:
+
+```text
+ledgerlens_documents_total
+```
+
+Prometheus scrapes metrics from the FastAPI backend.
+
+Grafana visualizes the collected metrics through dashboards.
+
+Grafana dashboards and provisioning configuration are stored under:
 
 ```text
 monitoring/grafana/
@@ -491,12 +801,12 @@ The Docker Compose application contains the following services:
 ┌────────────────────┐
 │   FastAPI Backend  │
 │      Port 8000     │
-└──────┬─────┬───────┘
-       │     │
-       │     ▼
-       │  SQLite
-       │
-       ▼
+└─────────┬──────────┘
+          │
+          ▼
+       SQLite
+          │
+          ▼
 ┌────────────────────┐
 │    Prometheus      │
 │      Port 9090     │
@@ -511,13 +821,15 @@ The Docker Compose application contains the following services:
 
 All services communicate through the Docker Compose network.
 
+The frontend communicates with the backend using the configured API URL.
+
 ---
 
 # CI/CD
 
-GitHub Actions is used to automate the continuous integration workflow.
+GitHub Actions is used to automate continuous integration and Docker validation.
 
-The intended CI/CD pipeline is:
+The current CI workflow:
 
 ```text
 Developer Push
@@ -528,45 +840,153 @@ GitHub Repository
       ▼
 GitHub Actions
       │
+      ├── Checkout Repository
+      │
+      ├── Set Up Python 3.11
+      │
       ├── Install Dependencies
       │
       ├── Run Automated Tests
       │
-      ├── Build Docker Image
+      ├── Create Temporary CI Environment File
       │
-      └── Deploy Application
+      ├── Validate Docker Compose
+      │
+      └── Build Docker Images
 ```
 
-The CI pipeline helps ensure that new code changes do not break the application.
+The CI workflow runs on a temporary GitHub Actions runner.
+
+The `.env` file created during CI is only used inside that temporary CI environment and is not created on the production VPS.
+
+The production VPS has its own separate `.env` file.
 
 ---
 
-# Cloud Deployment
+# Environment Separation
 
-The application is designed to support deployment to Google Cloud Run.
-
-The deployment workflow can be:
+The project separates development, CI, and production environments.
 
 ```text
-GitHub
-   │
-   ▼
+Local Development
+        │
+        ▼
+Local .env
+        │
+        ▼
+Local Docker Compose
+
+
 GitHub Actions
-   │
-   ▼
-Run Tests
-   │
-   ▼
-Build Docker Image
-   │
-   ▼
-Push Container Image
-   │
-   ▼
-Deploy to Google Cloud Run
+        │
+        ▼
+Temporary CI Environment
+        │
+        ▼
+Temporary CI Configuration
+
+
+Production VPS
+        │
+        ▼
+VPS .env
+        │
+        ▼
+Production Docker Compose
 ```
 
-The production API key and other sensitive configuration values should be provided through secure environment variables or cloud secret management rather than committed to the repository.
+The production `.env` file is never committed to GitHub.
+
+The `.env` file on the VPS remains separate from the GitHub repository.
+
+When new code is pulled from GitHub, the production `.env` file is not overwritten.
+
+---
+
+# VPS Deployment Workflow
+
+The production application is deployed on a Linux VPS.
+
+The deployment process is:
+
+```text
+Developer
+    │
+    ▼
+Git Commit
+    │
+    ▼
+GitHub Repository
+    │
+    ▼
+GitHub Actions
+    │
+    ├── Run Tests
+    │
+    └── Build Docker Images
+    │
+    ▼
+VPS
+    │
+    ▼
+git pull origin main
+    │
+    ▼
+docker compose up -d --build
+    │
+    ▼
+Updated Production Application
+```
+
+The VPS production environment contains its own:
+
+```text
+.env
+```
+
+This file contains production configuration and secrets and is intentionally excluded from Git.
+
+---
+
+# CloudPanel and HTTPS
+
+CloudPanel is used to manage the production VPS and reverse proxy configuration.
+
+Each major service is exposed through a separate subdomain.
+
+```text
+ledgerlens.prithibhandari.co.in
+        │
+        ▼
+Streamlit Frontend
+        │
+        ▼
+127.0.0.1:8501
+```
+
+```text
+api.prithibhandari.co.in
+        │
+        ▼
+FastAPI Backend
+        │
+        ▼
+127.0.0.1:8000
+```
+
+```text
+grafana.prithibhandari.co.in
+        │
+        ▼
+Grafana
+        │
+        ▼
+127.0.0.1:3001
+```
+
+HTTPS certificates are provided through Let's Encrypt.
+
+This provides encrypted communication between users and the production application.
 
 ---
 
@@ -582,11 +1002,16 @@ uploads/
 temp_uploads/
 .venv/
 __pycache__/
+*.swp
 ```
 
 API keys and secrets must never be committed to the GitHub repository.
 
 For local development, environment variables are loaded from a local `.env` file.
+
+For production, environment variables are stored in a separate `.env` file on the VPS.
+
+The production `.env` file is not part of the Git repository.
 
 ---
 
@@ -599,7 +1024,7 @@ A typical development workflow is:
 docker compose up -d --build
 
 # Run automated tests
-PYTHONPATH=. pytest -v
+python -m pytest -v
 
 # Check application status
 docker compose ps
@@ -607,8 +1032,51 @@ docker compose ps
 # View backend logs
 docker compose logs backend
 
+# View frontend logs
+docker compose logs frontend
+
 # Stop the application
 docker compose down
+```
+
+---
+
+# Production Maintenance
+
+On the VPS, the application can be updated using:
+
+```bash
+cd /home/prithibhandari/ledgerlens
+```
+
+Pull the latest code:
+
+```bash
+git pull origin main
+```
+
+Rebuild and restart the services:
+
+```bash
+docker compose up -d --build
+```
+
+Check the services:
+
+```bash
+docker compose ps
+```
+
+Check backend health:
+
+```bash
+curl https://api.prithibhandari.co.in/health
+```
+
+View backend logs:
+
+```bash
+docker compose logs backend
 ```
 
 ---
@@ -625,27 +1093,40 @@ Before submission, verify:
 ✓ Swagger API works
 ✓ Prometheus is running
 ✓ Grafana is running
+✓ Monitoring metrics are collected
 ✓ Dashboard is available
+✓ Human review workflow works
 ✓ Automated tests pass
 ✓ API keys are not committed
 ✓ .env files are ignored
-✓ CI/CD configuration is included
+✓ CI workflow runs successfully
+✓ Docker images build successfully
+✓ Production VPS deployment works
+✓ HTTPS is enabled
+✓ CloudPanel reverse proxies are configured
 ```
 
 ---
 
-## Capstone Submission
+# Capstone Submission
 
 The project repository contains:
 
 * Source code
+* FastAPI backend
+* Streamlit frontend
 * Docker configuration
+* Docker Compose configuration
 * Automated tests
 * Monitoring configuration
-* CI/CD configuration
+* Prometheus configuration
+* Grafana configuration
+* GitHub Actions CI configuration
 * Project documentation
 
 Sensitive credentials and local development files are intentionally excluded from the repository.
+
+The production application is deployed on a Linux VPS and accessed through secure HTTPS domains.
 
 ---
 
